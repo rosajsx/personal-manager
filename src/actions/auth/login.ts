@@ -4,6 +4,12 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
+import { z } from "zod";
+
+const schema = z.object({
+  email: z.string({ invalid_type_error: "Invalid Email" }),
+  password: z.string(),
+});
 
 export async function login(formData: FormData) {
   const supabase = createClient();
@@ -13,10 +19,17 @@ export async function login(formData: FormData) {
     password: formData.get("password") as string,
   };
 
+  const validateFields = schema.safeParse(data);
+
+  if (!validateFields.success) {
+    throw new Error("Validation error");
+  }
+
   const { error } = await supabase.auth.signInWithPassword(data);
 
-  if (error) {
-    redirect("/error");
+  if (!!error) {
+    throw new Error(error?.message);
+    // redirect("/error");
   }
 
   revalidatePath("/", "layout");

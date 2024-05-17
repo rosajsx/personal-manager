@@ -6,6 +6,8 @@ export async function middleware(request: NextRequest) {
   const { response, isAuth } = await updateSession(request);
   const isLoginPage = request.nextUrl.pathname === "/login";
 
+  if (request.nextUrl.pathname === "/error") return response;
+
   if (!isAuth && !isLoginPage) {
     return NextResponse.redirect(new URL("/login", request.url));
   }

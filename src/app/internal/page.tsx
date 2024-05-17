@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { signout } from "@/utils/auth/signout";
+import { signout } from "@/actions/auth/signout";
 import { Metadata } from "next";
 import Link from "next/link";
 
