@@ -32,6 +32,8 @@ const routes = [
 export const Menu = () => {
   const pathname = usePathname();
 
+  console.log({ pathname });
+
   return (
     <aside className=" max-w-[180px] flex flex-1 border px-6 py-4">
       <NavigationMenu className="items-start">
@@ -40,11 +42,8 @@ export const Menu = () => {
             <NavigationMenuItem key={route.href}>
               <Link href={route.href} legacyBehavior passHref>
                 <NavigationMenuLink
-                  className={clsx(
-                    navigationMenuTriggerStyle(),
-                    "gap-2 ",
-                    route.href === pathname && "bg-accent/50"
-                  )}
+                  data-state={route.href === pathname && "open"}
+                  className={clsx(navigationMenuTriggerStyle(), "gap-2 ")}
                 >
                   {route.Icon}
                   {route.name}
