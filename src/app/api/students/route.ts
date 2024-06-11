@@ -8,7 +8,5 @@ export async function GET(request: NextRequest) {
   const headersList = headers();
   const referer = headersList.get("personal_id");
 
-  console.log("referer", referer);
-
   return NextResponse.json({ message: "" }, { status: 200 });
 }

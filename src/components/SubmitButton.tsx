@@ -17,6 +17,7 @@ export const SubmitButton = ({
   return (
     <Button
       {...rest}
+      type="submit"
       disabled={rest.disabled || pending}
       aria-disabled={rest.disabled || pending}
     >

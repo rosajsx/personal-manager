@@ -55,7 +55,6 @@ export const AddStudentsModal = ({
 
     const validateFields = schema.safeParse(info);
     if (!validateFields.success) {
-      console.log("validateFields", validateFields);
       throw new Error("Validation error");
     }
 

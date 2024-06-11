@@ -32,8 +32,6 @@ const routes = [
 export const Menu = () => {
   const pathname = usePathname();
 
-  console.log({ pathname });
-
   return (
     <aside className=" max-w-[180px] flex flex-1 border px-6 py-4">
       <NavigationMenu className="items-start">
