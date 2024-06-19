@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 export default function Page() {
-  //redirect("/internal");
+  redirect("/internal");
 
   return <div>teste</div>;
 }

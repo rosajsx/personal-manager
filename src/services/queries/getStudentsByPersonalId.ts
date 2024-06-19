@@ -1,13 +1,14 @@
 import { TypedSupabaseClient } from "@/utils/supabase/client";
 
-export function getStudentsByPersonalId(
+export async function getStudentsByPersonalId(
   client: TypedSupabaseClient,
   personalId: string
 ) {
-  return client
+  const response = await client
     .from("students")
     .select("*")
     .eq("personal_id", personalId)
-    .throwOnError()
-    .single();
+    .throwOnError();
+
+  return response.data;
 }

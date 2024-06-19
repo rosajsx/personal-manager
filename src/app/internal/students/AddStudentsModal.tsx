@@ -2,7 +2,6 @@
 import { Tooltip } from "@/components/Tooltip";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -21,7 +20,10 @@ import { Input } from "@/components/ui/input";
 import { Plus, ChevronUp, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
-import { addStudent } from "@/actions/students";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { addStudents } from "@/services/mutations/addStudents";
+import { TypedSupabaseClient } from "@/utils/supabase/client";
 
 const schema = z.object({
   email: z.string({ invalid_type_error: "Invalid Email" }).email(),
@@ -35,14 +37,27 @@ const schema = z.object({
 interface AddStudentsModalProps {
   personalId?: string;
   isLoading?: boolean;
+  client: TypedSupabaseClient;
 }
 
 export const AddStudentsModal = ({
   personalId,
   isLoading,
+  client,
 }: AddStudentsModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: (newStudent) => addStudents(newStudent, client),
+    onSuccess: () => {
+      setIsModalOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["students"] });
+    },
+  });
+
+  //! Adicionar react-hook-form aqui
   const action = async (data: FormData) => {
     const info = {
       name: data.get("name") as string,
@@ -51,18 +66,18 @@ export const AddStudentsModal = ({
       weight: data.get("weight") as string,
       height: data.get("height") as string,
       personal_id: personalId as string,
-    };
+    } as any;
 
     const validateFields = schema.safeParse(info);
     if (!validateFields.success) {
       throw new Error("Validation error");
     }
 
-    await addStudent(info);
+    mutation.mutate(info);
   };
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <Tooltip content="Adicionar estudante">
         <AlertDialogTrigger asChild>
           <Button variant="outline" size="icon" disabled={isLoading}>
@@ -100,8 +115,12 @@ export const AddStudentsModal = ({
           </Collapsible>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <Button type="submit" variant="outline">
-              Cadastrar
+            <Button
+              type="submit"
+              variant="outline"
+              disabled={mutation.isPending}
+            >
+              {mutation.isPending ? "Carregando..." : "Cadastrar"}
             </Button>
           </AlertDialogFooter>
         </form>

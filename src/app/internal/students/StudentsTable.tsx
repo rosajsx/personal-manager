@@ -12,21 +12,29 @@ import { Tooltip } from "@/components/Tooltip";
 import { Button } from "@/components/ui/button";
 import { RefreshCcw, Trash, User } from "lucide-react";
 import { RefreshButton } from "@/components/RefreshButton";
-import { ServerActionAction } from "next/dist/client/components/router-reducer/router-reducer-types";
-import { useRouter } from "next/navigation";
 
 interface StudentsTableProps {
   data: any[] | null;
   isLoading?: boolean;
+  isRefetching?: boolean;
+  refetch: () => void;
 }
 
-//! Adicionar animação animate-spin no refresh
-//! Quando atualizar, mostrar toast
+const StudentsTableLoading = () => {
+  return (
+    <div className="h-full flex items-center justify-center">
+      <RefreshCcw className="animate-spin" />
+    </div>
+  );
+};
 
-export const StudentsTable = ({ data, isLoading }: StudentsTableProps) => {
-  const router = useRouter();
-
-  if (isLoading) return <RefreshCcw className="animate-spin" />;
+export const StudentsTable = ({
+  data,
+  isLoading,
+  refetch,
+  isRefetching,
+}: StudentsTableProps) => {
+  if (isLoading || isRefetching) return <StudentsTableLoading />;
 
   return (
     <Table>
@@ -38,10 +46,7 @@ export const StudentsTable = ({ data, isLoading }: StudentsTableProps) => {
             Status do pagamento
           </TableHead>
           <TableHead className="text-end py-3">
-            <RefreshButton
-              isRefreshing={false}
-              action={() => router.refresh()}
-            />
+            <RefreshButton isRefreshing={!!isLoading} action={refetch} />
           </TableHead>
         </TableRow>
       </TableHeader>

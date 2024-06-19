@@ -38,7 +38,7 @@ export async function login(formData: FormData) {
     }
 
     revalidatePath("/", "layout");
-    redirect("/");
+    redirect("/internal");
   } catch (error) {
     if (isRedirectError(error)) {
       console.log("redirect error", error);

@@ -1,11 +1,13 @@
 "use server";
 
-import { createClient } from "@/utils/supabase/server";
+import useSupabaseServer from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function signout() {
-  const supabase = createClient();
+  const cookieStore = cookies();
+  const supabase = useSupabaseServer(cookieStore);
 
   const {
     data: { user },
