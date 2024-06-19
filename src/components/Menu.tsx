@@ -23,6 +23,11 @@ const routes = [
     Icon: <User size={18} />,
   },
   {
+    name: "Exercicios",
+    href: "/internal/exercises",
+    Icon: <Dumbbell size={18} />,
+  },
+  {
     name: "Treinos",
     href: "/internal/training-list",
     Icon: <Dumbbell size={18} />,
@@ -41,7 +46,10 @@ export const Menu = () => {
               <Link href={route.href} legacyBehavior passHref>
                 <NavigationMenuLink
                   data-state={route.href === pathname && "open"}
-                  className={clsx(navigationMenuTriggerStyle(), "gap-2 ")}
+                  className={clsx(
+                    navigationMenuTriggerStyle(),
+                    "w-[135px] justify-around"
+                  )}
                 >
                   {route.Icon}
                   {route.name}
