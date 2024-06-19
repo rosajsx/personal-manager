@@ -19,65 +19,36 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, ChevronUp, ChevronDown } from "lucide-react";
 import { useState } from "react";
-import { z } from "zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-import { addStudents } from "@/services/mutations/addStudents";
-import { TypedSupabaseClient } from "@/utils/supabase/client";
-
-const schema = z.object({
-  email: z.string({ invalid_type_error: "Invalid Email" }).email(),
-  name: z.string(),
-
-  age: z.string().optional().nullable(),
-  weight: z.string().optional().nullable(),
-  height: z.string().optional().nullable(),
-});
+import { addStudents } from "@/actions/students/addStudent";
+import { useRouter } from "next/navigation";
+import { SubmitButton } from "@/components/SubmitButton";
 
 interface AddStudentsModalProps {
   personalId?: string;
   isLoading?: boolean;
-  client: TypedSupabaseClient;
 }
 
 export const AddStudentsModal = ({
   personalId,
   isLoading,
-  client,
 }: AddStudentsModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
-  const queryClient = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: (newStudent) => addStudents(newStudent, client),
-    onSuccess: () => {
-      setIsModalOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["students"] });
-    },
-  });
+  const router = useRouter();
 
-  //! Adicionar react-hook-form aqui
   const action = async (data: FormData) => {
-    const info = {
-      name: data.get("name") as string,
-      email: data.get("email") as string,
-      age: data.get("age") as string,
-      weight: data.get("weight") as string,
-      height: data.get("height") as string,
-      personal_id: personalId as string,
-    } as any;
-
-    const validateFields = schema.safeParse(info);
-    if (!validateFields.success) {
-      throw new Error("Validation error");
+    try {
+      await addStudents(data!, personalId!);
+      setIsOpenModal(false);
+      router.refresh();
+    } catch (error) {
+      console.log("error", error);
     }
-
-    mutation.mutate(info);
   };
 
   return (
-    <AlertDialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+    <AlertDialog open={isOpenModal} onOpenChange={setIsOpenModal}>
       <Tooltip content="Adicionar estudante">
         <AlertDialogTrigger asChild>
           <Button variant="outline" size="icon" disabled={isLoading}>
@@ -115,13 +86,7 @@ export const AddStudentsModal = ({
           </Collapsible>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <Button
-              type="submit"
-              variant="outline"
-              disabled={mutation.isPending}
-            >
-              {mutation.isPending ? "Carregando..." : "Cadastrar"}
-            </Button>
+            <SubmitButton loadingText="Carregando...">Cadastrar</SubmitButton>
           </AlertDialogFooter>
         </form>
       </AlertDialogContent>

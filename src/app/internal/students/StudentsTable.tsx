@@ -15,9 +15,6 @@ import { RefreshButton } from "@/components/RefreshButton";
 
 interface StudentsTableProps {
   data: any[] | null;
-  isLoading?: boolean;
-  isRefetching?: boolean;
-  refetch: () => void;
 }
 
 const StudentsTableLoading = () => {
@@ -28,14 +25,7 @@ const StudentsTableLoading = () => {
   );
 };
 
-export const StudentsTable = ({
-  data,
-  isLoading,
-  refetch,
-  isRefetching,
-}: StudentsTableProps) => {
-  if (isLoading || isRefetching) return <StudentsTableLoading />;
-
+export const StudentsTable = ({ data }: StudentsTableProps) => {
   return (
     <Table>
       <TableHeader>
@@ -44,9 +34,6 @@ export const StudentsTable = ({
           <TableHead className="text-center py-3">Email</TableHead>
           <TableHead className="text-center py-3">
             Status do pagamento
-          </TableHead>
-          <TableHead className="text-end py-3">
-            <RefreshButton isRefreshing={!!isLoading} action={refetch} />
           </TableHead>
         </TableRow>
       </TableHeader>

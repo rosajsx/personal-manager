@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 import "./globals.css";
-import { ReactQueryClientProvider } from "@/components/QueryClientProvider";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -21,24 +20,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ReactQueryClientProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body
-          className={cn(
-            "min-h-screen min-w-screen bg-background font-sans antialiased flex flex-col",
-            fontSans.variable
-          )}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(
+          "min-h-screen min-w-screen bg-background font-sans antialiased flex flex-col",
+          fontSans.variable
+        )}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </body>
-      </html>
-    </ReactQueryClientProvider>
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
