@@ -10,20 +10,11 @@ import {
 } from "@/components/ui/table";
 import { Tooltip } from "@/components/Tooltip";
 import { Button } from "@/components/ui/button";
-import { RefreshCcw, Trash, User } from "lucide-react";
-import { RefreshButton } from "@/components/RefreshButton";
+import { Trash, User } from "lucide-react";
 
 interface StudentsTableProps {
   data: any[] | null;
 }
-
-const StudentsTableLoading = () => {
-  return (
-    <div className="h-full flex items-center justify-center">
-      <RefreshCcw className="animate-spin" />
-    </div>
-  );
-};
 
 export const StudentsTable = ({ data }: StudentsTableProps) => {
   return (
