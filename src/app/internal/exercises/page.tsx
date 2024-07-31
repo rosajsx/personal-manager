@@ -12,8 +12,6 @@ export const metadata: Metadata = {
 export default async function ExerciseList() {
   const data = await getExercises();
 
-  console.log(data);
-
   return (
     <div className="w-full h-full p-4 flex flex-col gap-4">
       <Card>
