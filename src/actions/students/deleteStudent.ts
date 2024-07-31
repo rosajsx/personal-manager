@@ -4,8 +4,8 @@ import { TypedSupabaseClient } from "@/utils/supabase/client";
 import useSupabaseServer from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 
-export const getStudentsByPersonalId = async (
-  personalId: string,
+export const deleteStudentById = async (
+  studentId: string,
   client?: TypedSupabaseClient
 ) => {
   const cookieStore = cookies();
@@ -14,9 +14,9 @@ export const getStudentsByPersonalId = async (
 
   const response = await supabase
     .from("students")
-    .select("*")
-    .eq("personal_id", personalId)
+    .delete()
+    .eq("id", studentId)
     .throwOnError();
 
-  return response.data;
+  return response.statusText;
 };

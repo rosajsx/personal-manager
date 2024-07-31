@@ -14,6 +14,7 @@ import { schema } from "./AddExercisesModal";
 import { Select, SelectItemProps } from "@/components/Select";
 import { MultiSelect, MultiSelectProps } from "@/components/multiSelect";
 import {
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
@@ -139,9 +140,7 @@ export const ExerciseForm = ({
 
         <AlertDialogFooter className="pt-6">
           <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
-          <Button type="submit" disabled={isLoading}>
-            Cadastrar
-          </Button>
+          <AlertDialogAction type="submit">Cadastrar</AlertDialogAction>
         </AlertDialogFooter>
       </form>
     </Form>
