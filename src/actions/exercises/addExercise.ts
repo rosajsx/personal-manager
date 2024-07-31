@@ -1,10 +1,10 @@
 "use server";
 
-import { z } from "zod";
 import { cookies } from "next/headers";
 
 import useSupabaseServer from "@/utils/supabase/server";
 import { TypedSupabaseClient } from "@/utils/supabase/client";
+import { addCategories } from "./addCategories";
 
 interface Data {
   name: string;
@@ -34,10 +34,7 @@ export const addExercise = async (data: Data, client?: TypedSupabaseClient) => {
     exercise_id: itemId?.id,
   }));
 
-  await supabase
-    .from("exercise_categories")
-    .insert(categoriesData)
-    .throwOnError();
+  await addCategories(categoriesData || [], client);
 
   return response.statusText;
 };
